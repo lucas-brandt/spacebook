@@ -1,5 +1,6 @@
 package com.example.spacebook.feed
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -38,7 +39,10 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        prefs = requireContext().applicationContext.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+
         viewModel.state.observe(viewLifecycleOwner, this::onStateChanged)
+        viewModel.getFeed(prefs.getInt("userId", 0))
     }
 
     private fun onStateChanged(state: FeedViewModel.State) {

@@ -54,6 +54,16 @@ interface SpacebookApi {
     ): Feed
 
     @JsonClass(generateAdapter = true)
+    data class ActivityHighRating(
+        @Json(name = "id") val id: Int,
+        @Json(name = "userId") val userId: Int,
+        @Json(name = "occurredAt") val occurredAt: Instant,
+        @Json(name = "type") override val type: Type,
+        @Json(name = "data") val data: Post?
+    ): Feed
+
+
+    @JsonClass(generateAdapter = true)
     data class Post(
         @Json(name = "id") val id: Int,
         @Json(name = "title") val title: String,
@@ -79,11 +89,11 @@ interface SpacebookApi {
         @Json(name = "pullRequestNumber") val pullRequestNumber: Int,
     )
 
-    object HighRating: Feed {
-        override val type = Type.HIGH_RATING
+    object Default: Feed {
+        override val type = Type.NULL
     }
 
-    enum class Type { NEW_POST, NEW_COMMENT, HIGH_RATING, GITHUB_EVENT, GITHUB_NEW_REPO, GITHUB_NEW_PR, GITHUB_MERGED_PR, GITHUB_PUSH }
+    enum class Type { NEW_POST, NEW_COMMENT, HIGH_RATING, GITHUB_EVENT, GITHUB_NEW_REPO, GITHUB_NEW_PR, GITHUB_MERGED_PR, GITHUB_PUSH, NULL }
 
     sealed interface Feed {
         val type: Type

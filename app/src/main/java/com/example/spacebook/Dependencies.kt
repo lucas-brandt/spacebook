@@ -50,7 +50,8 @@ class Dependencies(private val applicationContext: Context) {
         .withSubtype(ActivityPost::class.java, Type.NEW_POST.name)
         .withSubtype(ActivityComment::class.java, Type.NEW_COMMENT.name)
         .withSubtype(ActivityGithub::class.java, Type.GITHUB_EVENT.name)
-        .withDefaultValue(HighRating)
+        .withSubtype(ActivityHighRating::class.java, Type.HIGH_RATING.name)
+        .withDefaultValue(Default)
 }
 
 val Activity.dependencies: Dependencies get() = (application as App).dependencies
