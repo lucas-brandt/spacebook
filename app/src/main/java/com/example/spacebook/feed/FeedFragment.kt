@@ -52,7 +52,7 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                 //do stuff with error
             }
             is FeedViewModel.State.Success -> {
-                //put the list into a recycler view
+                binding.recyclerview.adapter = FeedAdapter(state.result)
             }
         }
     }
