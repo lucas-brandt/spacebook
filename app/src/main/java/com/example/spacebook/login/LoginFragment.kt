@@ -1,7 +1,9 @@
 package com.example.spacebook.login
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,6 +27,8 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var prefs: SharedPreferences
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -43,6 +47,7 @@ class LoginFragment : Fragment() {
             viewModel.login(email, password)
             dismissSoftKeyboard()
         }
+        prefs = requireContext().applicationContext.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
     }
 
     private fun onStateChanged(state: State) {
@@ -65,7 +70,10 @@ class LoginFragment : Fragment() {
                     getString(R.string.incorrect_password)
                 NETWORK_ERROR -> binding.LoginErrorMessage.visibility = View.VISIBLE
             }
-            Success -> findNavController().navigate(R.id.login_to_main)
+            is Success -> {
+                prefs.edit().putInt("userId", state.result.id).apply()
+                findNavController().navigate(R.id.login_to_main)
+            }
         }
     }
 

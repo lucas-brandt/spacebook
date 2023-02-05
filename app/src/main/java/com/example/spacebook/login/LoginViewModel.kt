@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spacebook.api.SpacebookApi
+import com.example.spacebook.api.SpacebookApi.User
 import com.example.spacebook.login.LoginViewModel.State.Error.Reason.*
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -14,7 +15,7 @@ class LoginViewModel(private val api: SpacebookApi) : ViewModel() {
     sealed class State {
         object FillingOutForm : State()
         object LoggingIn : State()
-        object Success : State()
+        data class Success(val result: User) : State()
         data class Error(val reason: Reason) : State() {
             enum class Reason { INVALID_EMAIL, INVALID_PASSWORD, INCORRECT_PASSWORD, NETWORK_ERROR }
         }
@@ -37,7 +38,7 @@ class LoginViewModel(private val api: SpacebookApi) : ViewModel() {
             try {
                 val res = api.login(SpacebookApi.SessionRequest(email, password))
                 _state.value = when {
-                    res.data != null -> State.Success
+                    res.data != null -> State.Success(res.data)
                     res.error?.type == "NOT_AUTHENTICATED" -> State.Error(INCORRECT_PASSWORD)
                     else -> State.Error(NETWORK_ERROR)
                 }
