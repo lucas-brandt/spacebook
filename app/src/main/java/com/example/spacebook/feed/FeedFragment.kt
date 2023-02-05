@@ -42,7 +42,7 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         prefs = requireContext().applicationContext.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
 
         viewModel.state.observe(viewLifecycleOwner, this::onStateChanged)
-        viewModel.getFeed(prefs.getInt("userId", 0))
+        viewModel.getFeed(5) //harcode user 5 because maks/max/maksim told me to
     }
 
     private fun onStateChanged(state: FeedViewModel.State) {
@@ -52,7 +52,7 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                 //do stuff with error
             }
             is FeedViewModel.State.Success -> {
-                binding.recyclerview.adapter = FeedAdapter(state.result)
+                    binding.recyclerview.adapter = FeedAdapter(state.result)
             }
         }
     }
