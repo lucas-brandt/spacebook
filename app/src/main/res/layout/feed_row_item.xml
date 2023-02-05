@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:paddingTop="8dp"
     android:layout_width="match_parent"
-    android:layout_height="80dp">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/date"
@@ -45,10 +45,11 @@
         style="@style/TextAppearance.MaterialComponents.Caption"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
         android:text="X Comments"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@id/guidelineStart"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/git_branch" />
 
     <TextView
         android:id="@+id/git_branch"
@@ -69,7 +70,16 @@
         android:src="@drawable/arrow_forward"
         app:tint="?android:textColorHint"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintTop_toBottomOf="@+id/comments"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@id/guidelineStart"
+        />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineStart"
