@@ -5,61 +5,79 @@ import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.example.spacebook.R
 import com.example.spacebook.api.SpacebookApi
 import com.example.spacebook.api.SpacebookApi.Feed
-import com.example.spacebook.api.SpacebookApi.Type
 
 class FeedAdapter(private val list: List<Feed>) : RecyclerView.Adapter<FeedAdapter.ViewHolder>() {
 
-    // create new views
+    var onItemClick: ((Feed) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        // inflates the card_view_design view
-        // that is used to hold list item
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.feed_row_item, parent, false)
 
         return ViewHolder(view)
     }
 
-    // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
-        val currentFeedActivity = list[position]
-        when(currentFeedActivity) {
+        when(val currentFeedActivity = list[position]) {
             is SpacebookApi.ActivityPost -> {
                 holder.date.text = currentFeedActivity.data.postedAt.toString()
                 holder.title.text = currentFeedActivity.data.title
                 holder.newPost.visibility = VISIBLE
-                holder.comments.visibility = VISIBLE
             }
             is SpacebookApi.ActivityComment -> {
                 holder.date.text = currentFeedActivity.data.commentedAt.toString()
-                holder.title.text = currentFeedActivity.data.message
-            }
-            is SpacebookApi.ActivityGithub -> {
-                //gross another when statement
+                holder.title.text = "Commented on a post"
             }
             is SpacebookApi.ActivityHighRating -> {
                 holder.title.text = "Passed 4 stars!"
                 holder.date.text = currentFeedActivity.occurredAt.toString()
             }
+            is SpacebookApi.ActivityGithubMergedPr -> {
+                val string = "Merged #${currentFeedActivity.data.pullRequestNumber}"
+                holder.title.text = string
+            }
+            is SpacebookApi.ActivityGithubPr -> {
+                val string = "Opened a new Pull Request #${currentFeedActivity.data.pullRequestNumber} for"
+                holder.title.text = string
+                holder.gitBranch.visibility = VISIBLE
+                holder.gitBranch.text = currentFeedActivity.data.branch
+            }
+            is SpacebookApi.ActivityGithubPush -> {
+                val string = "Pushed commits to"
+                holder.title.text = string
+                holder.gitBranch.visibility = VISIBLE
+                holder.gitBranch.text = currentFeedActivity.data.branch
+            }
+            is SpacebookApi.ActivityGithubRepo -> {
+                val string = "Created a new repository"
+                holder.title.text = string
+                holder.gitBranch.visibility = VISIBLE
+                holder.gitBranch.text = currentFeedActivity.data.branch
+            }
             SpacebookApi.Default -> return
         }
     }
 
-    // return the number of the items in the list
     override fun getItemCount(): Int {
         return list.size
     }
 
-    // Holds the views for adding it to image and text
-    class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
+    inner class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
         val date: TextView = itemView.findViewById(R.id.date)
         val newPost: TextView = itemView.findViewById(R.id.new_post)
         val title: TextView = itemView.findViewById(R.id.title)
-        val comments: TextView = itemView.findViewById(R.id.comments)
         val gitBranch: TextView = itemView.findViewById(R.id.git_branch)
+
+        init {
+            itemView.setOnClickListener {
+                onItemClick?.invoke(list[adapterPosition])
+            }
+        }
     }
 }

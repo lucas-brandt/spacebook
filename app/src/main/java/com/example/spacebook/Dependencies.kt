@@ -49,7 +49,10 @@ class Dependencies(private val applicationContext: Context) {
     val PostTypeFactory = PolymorphicJsonAdapterFactory.of(Feed::class.java, "type")
         .withSubtype(ActivityPost::class.java, Type.NEW_POST.name)
         .withSubtype(ActivityComment::class.java, Type.NEW_COMMENT.name)
-        .withSubtype(ActivityGithub::class.java, Type.GITHUB_EVENT.name)
+        .withSubtype(ActivityGithubPr::class.java, Type.GITHUB_NEW_PR.name)
+        .withSubtype(ActivityGithubMergedPr::class.java, Type.GITHUB_MERGED_PR.name)
+        .withSubtype(ActivityGithubPush::class.java, Type.GITHUB_PUSH.name)
+        .withSubtype(ActivityGithubRepo::class.java, Type.GITHUB_NEW_REPO.name)
         .withSubtype(ActivityHighRating::class.java, Type.HIGH_RATING.name)
         .withDefaultValue(Default)
 }

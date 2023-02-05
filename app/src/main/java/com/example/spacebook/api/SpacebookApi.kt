@@ -45,7 +45,34 @@ interface SpacebookApi {
     ): Feed
 
     @JsonClass(generateAdapter = true)
-    data class ActivityGithub(
+    data class ActivityGithubRepo(
+        @Json(name = "id") val id: Int,
+        @Json(name = "userId") val userId: Int,
+        @Json(name = "occurredAt") val occurredAt: Instant,
+        @Json(name = "type") override val type: Type,
+        @Json(name = "data") val data: GitHubEvent
+    ): Feed
+
+    @JsonClass(generateAdapter = true)
+    data class ActivityGithubPr(
+        @Json(name = "id") val id: Int,
+        @Json(name = "userId") val userId: Int,
+        @Json(name = "occurredAt") val occurredAt: Instant,
+        @Json(name = "type") override val type: Type,
+        @Json(name = "data") val data: GitHubEvent
+    ): Feed
+
+    @JsonClass(generateAdapter = true)
+    data class ActivityGithubMergedPr(
+        @Json(name = "id") val id: Int,
+        @Json(name = "userId") val userId: Int,
+        @Json(name = "occurredAt") val occurredAt: Instant,
+        @Json(name = "type") override val type: Type,
+        @Json(name = "data") val data: GitHubEvent
+    ): Feed
+
+    @JsonClass(generateAdapter = true)
+    data class ActivityGithubPush(
         @Json(name = "id") val id: Int,
         @Json(name = "userId") val userId: Int,
         @Json(name = "occurredAt") val occurredAt: Instant,
@@ -83,17 +110,17 @@ interface SpacebookApi {
 
     @JsonClass(generateAdapter = true)
     data class GitHubEvent(
-        @Json(name = "githubId") val githubId: Int,
+        @Json(name = "githubId") val githubId: Long,
         @Json(name = "url") val url: String,
-        @Json(name = "branch") val branch: String,
-        @Json(name = "pullRequestNumber") val pullRequestNumber: Int,
+        @Json(name = "branch") val branch: String?,
+        @Json(name = "pullRequestNumber") val pullRequestNumber: Long?,
     )
 
     object Default: Feed {
         override val type = Type.NULL
     }
 
-    enum class Type { NEW_POST, NEW_COMMENT, HIGH_RATING, GITHUB_EVENT, GITHUB_NEW_REPO, GITHUB_NEW_PR, GITHUB_MERGED_PR, GITHUB_PUSH, NULL }
+    enum class Type { NEW_POST, NEW_COMMENT, HIGH_RATING, GITHUB_NEW_REPO, GITHUB_NEW_PR, GITHUB_MERGED_PR, GITHUB_PUSH, NULL }
 
     sealed interface Feed {
         val type: Type
