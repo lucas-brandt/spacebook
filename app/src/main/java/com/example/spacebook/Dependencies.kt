@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.spacebook.api.InstantAdapter
 import com.example.spacebook.api.SpacebookApi
+import com.example.spacebook.api.SpacebookApi.*
 import com.example.spacebook.api.TokenManager
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -42,6 +44,12 @@ class Dependencies(private val applicationContext: Context) {
             .build()
             .create()
     }
+
+    val PostTypeFactory = PolymorphicJsonAdapterFactory.of(PostType::class.java, "type")
+        .withSubtype(Post::class.java, Type.NEW_POST.name)
+        .withSubtype(Comment::class.java, Type.NEW_COMMENT.name)
+        .withSubtype(GitHubEvent::class.java, Type.GITHUB_EVENT.name)
+        .withDefaultValue(HighRating)
 }
 
 val Activity.dependencies: Dependencies get() = (application as App).dependencies
