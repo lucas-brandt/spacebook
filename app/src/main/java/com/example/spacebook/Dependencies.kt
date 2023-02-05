@@ -24,6 +24,7 @@ import retrofit2.create
 class Dependencies(private val applicationContext: Context) {
     private val moshi: Moshi by lazy {
         Moshi.Builder()
+            .add(PostTypeFactory)
             .add(InstantAdapter())
             .build()
     }
@@ -45,10 +46,10 @@ class Dependencies(private val applicationContext: Context) {
             .create()
     }
 
-    val PostTypeFactory = PolymorphicJsonAdapterFactory.of(PostType::class.java, "type")
-        .withSubtype(Post::class.java, Type.NEW_POST.name)
-        .withSubtype(Comment::class.java, Type.NEW_COMMENT.name)
-        .withSubtype(GitHubEvent::class.java, Type.GITHUB_EVENT.name)
+    val PostTypeFactory = PolymorphicJsonAdapterFactory.of(Feed::class.java, "type")
+        .withSubtype(ActivityPost::class.java, Type.NEW_POST.name)
+        .withSubtype(ActivityComment::class.java, Type.NEW_COMMENT.name)
+        .withSubtype(ActivityGithub::class.java, Type.GITHUB_EVENT.name)
         .withDefaultValue(HighRating)
 }
 
