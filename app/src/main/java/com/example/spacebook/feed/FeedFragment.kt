@@ -44,7 +44,7 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.state.observe(viewLifecycleOwner, this::onStateChanged)
-        viewModel.getFeed(13) //harcode user 13 because maks/max/maksim told me to
+        viewModel.getFeed(13) //hardcode user 13 because maks/max/maksim told me to
     }
 
     private fun onStateChanged(state: FeedViewModel.State) {

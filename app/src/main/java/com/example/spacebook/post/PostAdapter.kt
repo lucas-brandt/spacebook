@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -41,7 +42,7 @@ class PostAdapter(private val list: List<Comment>) : RecyclerView.Adapter<PostAd
         val name: TextView = itemView.findViewById(R.id.name)
 
         init {
-            itemView.setOnClickListener {
+            itemView.findViewById<ImageView>(R.id.trash).setOnClickListener {
                 onItemClick?.invoke(list[adapterPosition])
             }
         }

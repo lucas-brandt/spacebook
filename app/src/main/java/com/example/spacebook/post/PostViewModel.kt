@@ -93,6 +93,7 @@ class PostViewModel(private val api: SpacebookApi) : ViewModel() {
                 }
             } catch (e: HttpException) {
                 _deleteState.value = DeleteState.Error(e.toString())
+                _deleteState.value = DeleteState.Retrieving //needs to be here so the onClick doesn't get called multiple times?
             }
         }
     }

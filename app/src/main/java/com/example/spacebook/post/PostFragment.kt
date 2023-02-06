@@ -87,6 +87,7 @@ class PostFragment : Fragment() {
             is PostViewModel.CommentState.Success -> {
                 val postAdapter = PostAdapter(state.result)
                 binding.recyclerview.adapter = postAdapter
+
                 postAdapter.onItemClick = {
                     if (it.userId == 13 || currentPost.author.id == 13) {
                        viewModel.deleteComment(it.id)
@@ -102,7 +103,7 @@ class PostFragment : Fragment() {
         when (state) {
             PostViewModel.DeleteState.Retrieving -> return
             is PostViewModel.DeleteState.Error -> {
-                Toast.makeText(context,"Comment failed to delete: ${state.e}", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,"Comment failed to delete: ${state.e}", Toast.LENGTH_SHORT).show()
             }
             is PostViewModel.DeleteState.Success -> {
                 Toast.makeText(context,"Comment was successfully deleted", Toast.LENGTH_SHORT).show()
