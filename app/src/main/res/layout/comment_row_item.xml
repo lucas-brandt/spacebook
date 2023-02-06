@@ -35,6 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textAlignment="viewStart"
+        android:text="A name I can't get without another network call boo"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@+id/date"

@@ -140,4 +140,7 @@ interface SpacebookApi {
 
     @GET("posts/{id}/comments")
     suspend fun getPostComments(@Path("id") id: Int): ApiResponse<List<Comment>>
+    
+    @DELETE("comments/{id}")
+    suspend fun deleteComment(@Path("id") id: Int): ApiResponse<Comment>
 }

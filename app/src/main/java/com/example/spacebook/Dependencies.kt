@@ -11,6 +11,7 @@ import com.example.spacebook.api.SpacebookApi.*
 import com.example.spacebook.api.TokenManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -39,7 +40,11 @@ class Dependencies(private val applicationContext: Context) {
             .baseUrl("https://spacebook.dev.fixdapp.com/api/")
             .client(
                 OkHttpClient().newBuilder()
-                    .addInterceptor(tokenManager)
+                    .addInterceptor(Interceptor { chain ->
+                        val builder = chain.request().newBuilder()
+                        builder.header("Authorization", "Bearer eyJhbGciOiJub25lIn0.eyJqdGkiOiIxMDNhZWExNy1mM2UzLTRiMTItODFiMi01NDc4ZmQ1M2Q2YzgiLCJleHAiOjE1NTIwMTgyMzEsInVpZCI6MX0")
+                        return@Interceptor chain.proceed(builder.build())
+                    })
                     .build()
             )
             .build()

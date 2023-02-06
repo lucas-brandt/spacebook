@@ -23,6 +23,12 @@ class PostViewModel(private val api: SpacebookApi) : ViewModel() {
         data class Error(val e: String) : PostState()
     }
 
+    sealed class DeleteState {
+        object Retrieving : DeleteState()
+        data class Success(val result: Comment) : DeleteState()
+        data class Error(val e: String) : DeleteState()
+    }
+
     val feed: MutableLiveData<Feed> = MutableLiveData()
     var isPost = false
 
@@ -31,6 +37,9 @@ class PostViewModel(private val api: SpacebookApi) : ViewModel() {
 
     private val _commentState: MutableLiveData<CommentState> = MutableLiveData(CommentState.Retrieving)
     val commentState: LiveData<CommentState> get() = _commentState
+
+    private val _deleteState: MutableLiveData<DeleteState> = MutableLiveData(DeleteState.Retrieving)
+    val deleteState: LiveData<DeleteState> get() = _deleteState
 
     fun getPostId(): Int {
         when(feed.value) {
@@ -70,6 +79,20 @@ class PostViewModel(private val api: SpacebookApi) : ViewModel() {
                 }
             } catch (e: HttpException) {
                 _commentState.value = CommentState.Error(e.toString())
+            }
+        }
+    }
+
+    fun deleteComment(commentId: Int) {
+        viewModelScope.launch {
+            try {
+                val res = api.deleteComment(commentId)
+                _deleteState.value = when {
+                    res.data != null -> DeleteState.Success(res.data)
+                    else -> DeleteState.Error("error")
+                }
+            } catch (e: HttpException) {
+                _deleteState.value = DeleteState.Error(e.toString())
             }
         }
     }

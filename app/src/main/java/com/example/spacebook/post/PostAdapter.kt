@@ -28,7 +28,7 @@ class PostAdapter(private val list: List<Comment>) : RecyclerView.Adapter<PostAd
 
         holder.comment.text = currentComment.message
         holder.date.text = currentComment.commentedAt.toString()
-        holder.name.text = currentComment.userId.toString()
+        currentComment.postId
     }
 
     override fun getItemCount(): Int {

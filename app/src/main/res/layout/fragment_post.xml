@@ -48,6 +48,17 @@
                 tools:text="1 Nov 2020" />
 
             <TextView
+                android:id="@+id/rating"
+                style="@style/TextAppearance.MaterialComponents.Body2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="viewStart"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@+id/date"
+                tools:text="rating: 3.5" />
+
+            <TextView
                 android:id="@+id/body"
                 style="@style/TextAppearance.MaterialComponents.Body2"
                 android:layout_width="0dp"
@@ -56,13 +67,14 @@
                 android:textAlignment="viewStart"
                 app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
                 app:layout_constraintStart_toEndOf="@id/guidelineStart"
-                app:layout_constraintTop_toBottomOf="@+id/date"
+                app:layout_constraintTop_toBottomOf="@+id/rating"
                 tools:text="Cool story bro this is an amazing post" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="20dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
                 app:layout_constraintStart_toEndOf="@id/guidelineStart"
