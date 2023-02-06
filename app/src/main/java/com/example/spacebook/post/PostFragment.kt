@@ -12,17 +12,18 @@ import androidx.fragment.app.activityViewModels
 import com.example.spacebook.R
 import com.example.spacebook.api.SpacebookApi
 import com.example.spacebook.databinding.FragmentFeedBinding
+import com.example.spacebook.databinding.FragmentPostBinding
 import com.example.spacebook.feed.FeedAdapter
 import com.example.spacebook.fromDependencies
 
 
-class PostFragment : Fragment(), Toolbar.OnMenuItemClickListener {
+class PostFragment : Fragment() {
 
     private val viewModel: PostViewModel by activityViewModels {
         fromDependencies { PostViewModel(api) }
     }
 
-    private var _binding: FragmentFeedBinding? = null
+    private var _binding: FragmentPostBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -30,15 +31,12 @@ class PostFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFeedBinding.inflate(inflater, container, false)
+        _binding = FragmentPostBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.state.observe(viewLifecycleOwner, this::onStateChanged)
-        viewModel.getFeed(5) //harcode user 5 because maks/max/maksim told me to
     }
 
     private fun onStateChanged(state: PostViewModel.State) {
@@ -48,32 +46,8 @@ class PostFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                 //do stuff with error
             }
             is PostViewModel.State.Success -> {
-                val feedAdapter = FeedAdapter(state.result)
-                binding.recyclerview.adapter = feedAdapter
-                feedAdapter.onItemClick = {
-                    when(it) {
-                        is SpacebookApi.ActivityComment -> { }
-                        is SpacebookApi.ActivityHighRating -> {}
-                        is SpacebookApi.ActivityPost -> TODO()
-                        is SpacebookApi.ActivityGithubMergedPr -> TODO()
-                        is SpacebookApi.ActivityGithubPr -> TODO()
-                        is SpacebookApi.ActivityGithubPush -> TODO()
-                        is SpacebookApi.ActivityGithubRepo -> TODO()
-                        SpacebookApi.Default -> {}
-                    }
-                }
 
             }
         }
-    }
-
-    override fun onMenuItemClick(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.logout -> {
-                // TODO: log out
-            }
-            else -> return false
-        }
-        return true
     }
 }

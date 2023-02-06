@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.spacebook.R
 import com.example.spacebook.api.SpacebookApi
 import com.example.spacebook.databinding.FragmentFeedBinding
@@ -25,7 +26,6 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     private var _binding: FragmentFeedBinding? = null
     private val binding get() = _binding!!
-    private lateinit var prefs: SharedPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,7 +38,6 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        prefs = requireContext().applicationContext.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
 
         viewModel.state.observe(viewLifecycleOwner, this::onStateChanged)
         viewModel.getFeed(13) //harcode user 13 because maks/max/maksim told me to
@@ -55,7 +54,7 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                 binding.recyclerview.adapter = feedAdapter
                 feedAdapter.onItemClick = {
                     when(it) {
-                        is SpacebookApi.ActivityComment -> {}
+                        is SpacebookApi.ActivityComment -> { findNavController().navigate(R.id.action_feed_to_post) }
                         is SpacebookApi.ActivityHighRating -> {}
                         is SpacebookApi.ActivityPost -> {}
                         is SpacebookApi.ActivityGithubMergedPr -> {}
