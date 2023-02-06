@@ -11,27 +11,65 @@ import retrofit2.HttpException
 
 class PostViewModel(private val api: SpacebookApi) : ViewModel() {
 
-    sealed class State {
-        object Retrieving : State()
-        data class Success(val result: List<Feed>) : State()
-        data class Error(val e: String) : State()
+    sealed class CommentState {
+        object Retrieving : CommentState()
+        data class Success(val result: List<Comment>) : CommentState()
+        data class Error(val e: String) : CommentState()
     }
 
-    private val feed: MutableLiveData<Feed> = MutableLiveData()
+    sealed class PostState {
+        object Retrieving : PostState()
+        data class Success(val result: Post) : PostState()
+        data class Error(val e: String) : PostState()
+    }
 
-    private val _state: MutableLiveData<State> = MutableLiveData(State.Retrieving)
-    val state: LiveData<State> get() = _state
+    val feed: MutableLiveData<Feed> = MutableLiveData()
+    var isPost = false
 
-    fun getPost(userId: Int) {
+    private val _postState: MutableLiveData<PostState> = MutableLiveData(PostState.Retrieving)
+    val postState: LiveData<PostState> get() = _postState
+
+    private val _commentState: MutableLiveData<CommentState> = MutableLiveData(CommentState.Retrieving)
+    val commentState: LiveData<CommentState> get() = _commentState
+
+    fun getPostId(): Int {
+        when(feed.value) {
+            is ActivityPost -> {
+                isPost = true
+                return (feed.value as ActivityPost).data.id
+            }
+            is ActivityComment -> {
+                //need to make post and comments network call
+                return (feed.value as ActivityComment).data.postId
+            }
+            else -> { return 0 }
+        }
+    }
+
+    fun getPost(postId: Int) {
         viewModelScope.launch {
             try {
-                val res = api.getFeed(userId)
-                _state.value = when {
-                    res.data != null -> State.Success(res.data)
-                    else -> State.Error("error")
+                val res = api.getPost(postId)
+                _postState.value = when {
+                    res.data != null -> PostState.Success(res.data)
+                    else -> PostState.Error("error")
                 }
             } catch (e: HttpException) {
-                _state.value = State.Error(e.toString())
+                _postState.value = PostState.Error(e.toString())
+            }
+        }
+    }
+
+    fun getComments(postId: Int) {
+        viewModelScope.launch {
+            try {
+                val res = api.getPostComments(postId)
+                _commentState.value = when {
+                    res.data != null -> CommentState.Success(res.data)
+                    else -> CommentState.Error("error")
+                }
+            } catch (e: HttpException) {
+                _commentState.value = CommentState.Error(e.toString())
             }
         }
     }

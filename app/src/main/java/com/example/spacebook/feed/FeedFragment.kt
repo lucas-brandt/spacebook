@@ -1,7 +1,7 @@
 package com.example.spacebook.feed
 
-import android.content.Context
-import android.content.SharedPreferences
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -22,6 +22,10 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
     private val viewModel: FeedViewModel by activityViewModels {
         fromDependencies { FeedViewModel(api) }
+    }
+
+    private val postViewModel: PostViewModel by activityViewModels {
+        fromDependencies { PostViewModel(api) }
     }
 
     private var _binding: FragmentFeedBinding? = null
@@ -54,18 +58,37 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
                 binding.recyclerview.adapter = feedAdapter
                 feedAdapter.onItemClick = {
                     when(it) {
-                        is SpacebookApi.ActivityComment -> { findNavController().navigate(R.id.action_feed_to_post) }
+                        is SpacebookApi.ActivityComment -> {
+                            findNavController().navigate(R.id.action_feed_to_post)
+                            postViewModel.feed.value = it
+                        }
                         is SpacebookApi.ActivityHighRating -> {}
-                        is SpacebookApi.ActivityPost -> {}
-                        is SpacebookApi.ActivityGithubMergedPr -> {}
-                        is SpacebookApi.ActivityGithubPr -> {}
-                        is SpacebookApi.ActivityGithubPush -> {}
-                        is SpacebookApi.ActivityGithubRepo -> {}
+                        is SpacebookApi.ActivityPost -> {
+                            findNavController().navigate(R.id.action_feed_to_post)
+                            postViewModel.feed.value = it
+                        }
+                        is SpacebookApi.ActivityGithubMergedPr -> {
+                            startGithubBrowser(it.data.url)
+                        }
+                        is SpacebookApi.ActivityGithubPr -> {
+                            startGithubBrowser(it.data.url)
+                        }
+                        is SpacebookApi.ActivityGithubPush -> {
+                            startGithubBrowser(it.data.url)
+                        }
+                        is SpacebookApi.ActivityGithubRepo -> {
+                            startGithubBrowser(it.data.url)
+                        }
                         SpacebookApi.Default -> {}
                     }
                 }
             }
         }
+    }
+
+    fun startGithubBrowser(url: String) {
+        val intent = Intent(Intent.ACTION_VIEW).setData(Uri.parse(url))
+        startActivity(intent)
     }
 
     override fun onMenuItemClick(item: MenuItem?): Boolean {

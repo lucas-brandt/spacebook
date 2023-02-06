@@ -37,16 +37,48 @@ class PostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.postState.observe(viewLifecycleOwner, this::onPostStateChanged)
+        viewModel.commentState.observe(viewLifecycleOwner, this::onCommentStateChanged)
+
+        if (viewModel.isPost) {
+            viewModel.getComments(viewModel.getPostId())
+
+            val post = (viewModel.feed.value as SpacebookApi.ActivityPost).data
+            binding.title.text = post.title
+            binding.author.text = "by ${post.author.name}"
+            binding.date.text = post.postedAt.toString()
+            binding.body.text = post.body
+        } else {
+            val id = viewModel.getPostId()
+            viewModel.getPost(id)
+            viewModel.getComments(id)
+        }
     }
 
-    private fun onStateChanged(state: PostViewModel.State) {
+    private fun onPostStateChanged(state: PostViewModel.PostState) {
         when (state) {
-            PostViewModel.State.Retrieving -> return
-            is PostViewModel.State.Error -> {
+            PostViewModel.PostState.Retrieving -> return
+            is PostViewModel.PostState.Error -> {
                 //do stuff with error
             }
-            is PostViewModel.State.Success -> {
+            is PostViewModel.PostState.Success -> {
+                binding.title.text = state.result.title
+                binding.author.text = "by ${state.result.author.name}"
+                binding.date.text = state.result.postedAt.toString()
+                binding.body.text = state.result.body
+            }
+        }
+    }
 
+    private fun onCommentStateChanged(state: PostViewModel.CommentState) {
+        when (state) {
+            PostViewModel.CommentState.Retrieving -> return
+            is PostViewModel.CommentState.Error -> {
+                //do stuff with error
+            }
+            is PostViewModel.CommentState.Success -> {
+                val postAdapter = PostAdapter(state.result)
+                binding.recyclerview.adapter = postAdapter
             }
         }
     }

@@ -134,4 +134,10 @@ interface SpacebookApi {
 
     @GET("users/{id}/feed")
     suspend fun getFeed(@Path("id") id: Int): ApiResponse<List<Feed>>
+
+    @GET("posts/{id}")
+    suspend fun getPost(@Path("id") id: Int): ApiResponse<Post>
+
+    @GET("posts/{id}/comments")
+    suspend fun getPostComments(@Path("id") id: Int): ApiResponse<List<Comment>>
 }
