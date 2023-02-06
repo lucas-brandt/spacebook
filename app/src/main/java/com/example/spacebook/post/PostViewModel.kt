@@ -17,10 +17,12 @@ class PostViewModel(private val api: SpacebookApi) : ViewModel() {
         data class Error(val e: String) : State()
     }
 
+    private val feed: MutableLiveData<Feed> = MutableLiveData()
+
     private val _state: MutableLiveData<State> = MutableLiveData(State.Retrieving)
     val state: LiveData<State> get() = _state
 
-    fun getFeed(userId: Int) {
+    fun getPost(userId: Int) {
         viewModelScope.launch {
             try {
                 val res = api.getFeed(userId)

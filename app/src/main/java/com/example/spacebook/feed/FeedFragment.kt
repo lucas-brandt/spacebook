@@ -20,8 +20,8 @@ import com.example.spacebook.post.PostViewModel
 
 class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
 
-    private val viewModel: PostViewModel by activityViewModels {
-        fromDependencies { PostViewModel(api) }
+    private val viewModel: FeedViewModel by activityViewModels {
+        fromDependencies { FeedViewModel(api) }
     }
 
     private var _binding: FragmentFeedBinding? = null
@@ -43,13 +43,13 @@ class FeedFragment : Fragment(), Toolbar.OnMenuItemClickListener {
         viewModel.getFeed(13) //harcode user 13 because maks/max/maksim told me to
     }
 
-    private fun onStateChanged(state: PostViewModel.State) {
+    private fun onStateChanged(state: FeedViewModel.State) {
         when (state) {
-            PostViewModel.State.Retrieving -> return
-            is PostViewModel.State.Error -> {
+            FeedViewModel.State.Retrieving -> return
+            is FeedViewModel.State.Error -> {
                 //do stuff with error
             }
-            is PostViewModel.State.Success -> {
+            is FeedViewModel.State.Success -> {
                 val feedAdapter = FeedAdapter(state.result)
                 binding.recyclerview.adapter = feedAdapter
                 feedAdapter.onItemClick = {
