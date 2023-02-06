@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.spacebook.DateUtil
 import com.example.spacebook.R
 import com.example.spacebook.api.SpacebookApi
 import com.example.spacebook.api.SpacebookApi.Comment
@@ -28,7 +29,8 @@ class PostAdapter(private val list: List<Comment>) : RecyclerView.Adapter<PostAd
         val currentComment = list[position]
 
         holder.comment.text = currentComment.message
-        holder.date.text = currentComment.commentedAt.toString()
+        holder.date.text = DateUtil.formatInstant(currentComment.commentedAt)
+        holder.name.text = currentComment.userId.toString() //Not very sexy, but doing a network call here to get the name would be awful
         currentComment.postId
     }
 

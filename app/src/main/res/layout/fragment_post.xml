@@ -70,15 +70,25 @@
                 app:layout_constraintTop_toBottomOf="@+id/rating"
                 tools:text="Cool story bro this is an amazing post" />
 
+            <TextView
+                android:id="@+id/comments_title"
+                style="@style/TextAppearance.MaterialComponents.Headline6"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:textAlignment="viewStart"
+                app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+                app:layout_constraintStart_toEndOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@+id/body" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="20dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
                 app:layout_constraintStart_toEndOf="@id/guidelineStart"
-                app:layout_constraintTop_toBottomOf="@+id/body"
+                app:layout_constraintTop_toBottomOf="@+id/comments_title"
                 tools:itemCount="5"
                 tools:listitem="@layout/comment_row_item" />
 

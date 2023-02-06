@@ -87,6 +87,7 @@ class PostFragment : Fragment() {
             is PostViewModel.CommentState.Success -> {
                 val postAdapter = PostAdapter(state.result)
                 binding.recyclerview.adapter = postAdapter
+                binding.commentsTitle.text = "${state.result.size} Comments"
 
                 postAdapter.onItemClick = {
                     if (it.userId == 13 || currentPost.author.id == 13) {

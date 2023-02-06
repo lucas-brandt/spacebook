@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.example.spacebook.DateUtil
 import com.example.spacebook.R
 import com.example.spacebook.api.SpacebookApi
 import com.example.spacebook.api.SpacebookApi.Feed
@@ -26,21 +27,22 @@ class FeedAdapter(private val list: List<Feed>) : RecyclerView.Adapter<FeedAdapt
 
         when(val currentFeedActivity = list[position]) {
             is SpacebookApi.ActivityPost -> {
-                holder.date.text = currentFeedActivity.data.postedAt.toString()
+                holder.date.text = DateUtil.formatInstant(currentFeedActivity.data.postedAt)
                 holder.title.text = currentFeedActivity.data.title
                 holder.newPost.visibility = VISIBLE
             }
             is SpacebookApi.ActivityComment -> {
-                holder.date.text = currentFeedActivity.data.commentedAt.toString()
+                holder.date.text = DateUtil.formatInstant(currentFeedActivity.data.commentedAt)
                 holder.title.text = "Commented on a post"
             }
             is SpacebookApi.ActivityHighRating -> {
                 holder.title.text = "Passed 4 stars!"
-                holder.date.text = currentFeedActivity.occurredAt.toString()
+                holder.date.text = DateUtil.formatInstant(currentFeedActivity.occurredAt)
             }
             is SpacebookApi.ActivityGithubMergedPr -> {
                 val string = "Merged #${currentFeedActivity.data.pullRequestNumber}"
                 holder.title.text = string
+                //WHY DOESN'T THIS HAVE A BRANCH NAME?!
             }
             is SpacebookApi.ActivityGithubPr -> {
                 val string = "Opened a new Pull Request #${currentFeedActivity.data.pullRequestNumber} for"
